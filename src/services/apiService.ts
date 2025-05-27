@@ -21,62 +21,75 @@ export interface TripFormData {
 
 export const generateItinerary = async (formData: TripFormData): Promise<string> => {
   try {
-    const prompt = `You are a professional AI travel planner. Create a detailed, day-by-day travel itinerary based on the following preferences Format everything in proper Markdown with headings (##), bullet points, bold text for key items, and emojis for sections like Morning, Evening, etc. Do not include any explanation or extra text - just the markdown itinerary:
+    // First, format the interests to be more readable
+    const formattedInterests = formData.interests.map(interest => {
+      // Convert camelCase or kebab-case to Title Case
+      return interest
+        .split(/[-_]/)
+        .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+        .join(' ');
+    }).join(', ');
 
-Destinations: ${formData.destinations.join(', ')}
-Dates: ${formData.dateType === 'flexible' ? 'Flexible dates – suggest an ideal duration and timeline' : `${formData.startDate} to ${formData.endDate}`}
-Budget: $${formData.budget} per person – include estimated daily costs for meals, transportation, and activities
-Interests: ${formData.interests.join(', ')}
-Weather Preference: ${formData.weatherPreference} – avoid seasons or dates that conflict with this
-Pace: ${formData.pace} – adjust number of activities per day accordingly
-Trip Type: ${formData.tripType}
-Accessibility Needs: ${formData.accessibility ? 'Yes – ensure locations and travel are mobility-friendly' : 'No specific accessibility requirements'}
+    // Format dates
+    const dateInfo = formData.dateType === 'flexible' 
+      ? 'Flexible dates – suggest an ideal duration and timeline'
+      : `${formData.startDate} to ${formData.endDate}`;
 
----
+    const prompt = `# Travel Itinerary
 
-For each day of the trip, include:
+## Trip Details
+- **Destinations**: ${formData.destinations.join(', ')}
+- **Dates**: ${dateInfo}
+- **Budget**: $${formData.budget} per person
+- **Interests**: ${formattedInterests}
+- **Weather Preference**: ${formData.weatherPreference}
+- **Pace**: ${formData.pace}
+- **Trip Type**: ${formData.tripType}
+- **Accessibility**: ${formData.accessibility ? 'Wheelchair accessible options required' : 'Standard accessibility'}
 
-🗓 Morning
-- Activity + address
-- Travel time + local tip
-- Nearby breakfast or brunch recommendation
+## Daily Itinerary
 
-☀️ Afternoon
-- Activity + description + address
-- Lunch recommendation + estimated cost
-- Estimated time required for activity
+${formData.destinations.map((destination, index) => `
+# Day ${index + 1}: ${destination}
 
-🌙 Evening
-- Light cultural or nightlife activity (based on interests)
-- Dinner recommendation + vibe (casual, upscale, etc.)
-- Optional late-night tip (if trip pace is balanced or fast)
+### 🗓 Morning
+- **Breakfast**: [Restaurant Name] + [Address]
+  - *Local Tip: Best time to visit is early morning*
+- **Activity**: [Description]
+  - Location: [Address]
+  - Duration: [Time]
+  - Cost: $[Amount]
 
-Also include:
-- 🔄 Local transit or walking times between activities
-- 📍 Realistic geographic grouping to reduce travel time
-- 💡 Cultural insights (e.g., "Tuesdays this market closes early" or "Tipping is optional here")
-- 📱 Booking links or site suggestions where possible
+### ☀️ Afternoon
+- **Lunch**: [Restaurant Name] + [Address]
+  - *Estimated cost: $[Amount]*
+- **Activity**: [Description]
+  - Location: [Address]
+  - Duration: [Time]
+  - Cost: $[Amount]
 
----
+### 🌙 Evening
+- **Dinner**: [Restaurant Name] + [Address]
+  - *Ambiance: [Description]*
+- **Activity**: [Description]
+  - Location: [Address]
+  - Duration: [Time]
+  - Cost: $[Amount]
 
-Formatting:
-Respond in clear Markdown format with:
-Day 1: [Location or Region]
-- Sections: Morning, Afternoon, Evening
-- Bullet points, emojis (optional), and line breaks for clarity
-- Use bold for names, italics for local tips or descriptions
+💡 **Cultural Tips**:
+- [Insight 1]
+- [Insight 2]
 
----
-
-🎯 Goal:
-Make the itinerary realistic, enjoyable, and smartly paced, as if a local expert curated it with budget-conscious recommendations and time-saving transitions. Balance activity density based on the selected trip pace.`;
+🔄 **Transit Notes**:
+- [Transit details between locations]
+`).join('\n')}`;
 
     const completion = await openai.chat.completions.create({
       model: "openai/gpt-4",
       messages: [
         {
           role: "system",
-          content: "You are an expert travel planner creating detailed, day-by-day itineraries. Focus on providing specific, actionable plans that include exact locations, costs, and timing. Use proper Markdown formatting for clear organization."
+          content: "You are an expert travel planner. Create a detailed itinerary using the provided markdown template. Replace all placeholder text in brackets with specific, realistic recommendations. Maintain the exact markdown formatting provided."
         },
         {
           role: "user",
