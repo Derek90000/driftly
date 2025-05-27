@@ -34,7 +34,7 @@ export const ItineraryResult: React.FC<ItineraryResultProps> = ({ itinerary, onB
         <div className="flex gap-2">
           {isConnected ? (
             <>
-              <Button variant="glass" size="sm">
+              <Button variant="glass\" size="sm">
                 <Edit className="w-4 h-4 mr-2" />
                 Edit
               </Button>
