@@ -1,0 +1,182 @@
+/** @type {import('tailwindcss').Config} */
+export default {
+  content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
+  theme: {
+    extend: {
+      fontFamily: {
+        sans: ['Poppins', 'sans-serif'],
+      },
+      colors: {
+        primary: {
+          50: '#f0f7ff',
+          100: '#e0eefe',
+          200: '#bae0fd',
+          300: '#7ac6fd',
+          400: '#36a7f9',
+          500: '#0d8eed',
+          600: '#006fca',
+          700: '#0059a3',
+          800: '#004b86',
+          900: '#03396f',
+          950: '#002347',
+        },
+        secondary: {
+          50: '#edfcf5',
+          100: '#d4f7e6',
+          200: '#aaeed0',
+          300: '#74dfb4',
+          400: '#41c795',
+          500: '#22ac7c',
+          600: '#188963',
+          700: '#166e50',
+          800: '#175741',
+          900: '#154737',
+          950: '#0b2a20',
+        },
+        accent: {
+          50: '#fef6ee',
+          100: '#fdead7',
+          200: '#fad3ae',
+          300: '#f7b67a',
+          400: '#f28f40',
+          500: '#ef7019',
+          600: '#de5910',
+          700: '#b84010',
+          800: '#933315',
+          900: '#772c15',
+          950: '#40150a',
+        },
+        success: {
+          50: '#f0fdf4',
+          100: '#dcfce7',
+          200: '#bbf7d0',
+          300: '#86efac',
+          400: '#4ade80',
+          500: '#22c55e',
+          600: '#16a34a',
+          700: '#15803d',
+          800: '#166534',
+          900: '#14532d',
+          950: '#052e16',
+        },
+        warning: {
+          50: '#fffbeb',
+          100: '#fef3c7',
+          200: '#fde68a',
+          300: '#fcd34d',
+          400: '#fbbf24',
+          500: '#f59e0b',
+          600: '#d97706',
+          700: '#b45309',
+          800: '#92400e',
+          900: '#78350f',
+          950: '#451a03',
+        },
+        error: {
+          50: '#fef2f2',
+          100: '#fee2e2',
+          200: '#fecaca',
+          300: '#fca5a5',
+          400: '#f87171',
+          500: '#ef4444',
+          600: '#dc2626',
+          700: '#b91c1c',
+          800: '#991b1b',
+          900: '#7f1d1d',
+          950: '#450a0a',
+        },
+        drift: {
+          100: '#e6f2ff',
+          200: '#bfdfff',
+          300: '#80bfff',
+          400: '#4d9fff',
+          500: '#1a7fff',
+          600: '#0066cc',
+          700: '#004c99',
+          800: '#003366',
+          900: '#001933',
+        },
+      },
+      backgroundImage: {
+        'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
+        'hero-pattern': 'linear-gradient(to right bottom, #6366f1, #3b82f6, #0ea5e9, #06b6d4)',
+        'card-gradient': 'linear-gradient(to right bottom, rgba(255,255,255,0.7), rgba(255,255,255,0.3))',
+      },
+      boxShadow: {
+        'glass': '0 8px 32px 0 rgba(31, 38, 135, 0.37)',
+        'card': '0 4px 20px rgba(0, 0, 0, 0.05)',
+        'hover': '0 10px 25px rgba(0, 0, 0, 0.1)',
+      },
+      animation: {
+        'float': 'float 6s ease-in-out infinite',
+        'float-slow': 'float 8s ease-in-out infinite',
+        'float-fast': 'float 4s ease-in-out infinite',
+      },
+      keyframes: {
+        float: {
+          '0%, 100%': { transform: 'translateY(0)' },
+          '50%': { transform: 'translateY(-10px)' },
+        },
+      },
+      typography: {
+        DEFAULT: {
+          css: {
+            maxWidth: 'none',
+            color: 'inherit',
+            a: {
+              color: '#0d8eed',
+              textDecoration: 'none',
+              '&:hover': {
+                color: '#006fca',
+                textDecoration: 'underline',
+              },
+            },
+            strong: {
+              color: 'inherit',
+              fontWeight: '600',
+            },
+            h1: {
+              color: 'inherit',
+              fontWeight: '700',
+            },
+            h2: {
+              color: 'inherit',
+              fontWeight: '600',
+            },
+            h3: {
+              color: 'inherit',
+              fontWeight: '600',
+            },
+            h4: {
+              color: 'inherit',
+              fontWeight: '600',
+            },
+            code: {
+              color: 'inherit',
+              backgroundColor: 'rgba(255, 255, 255, 0.1)',
+              borderRadius: '0.25rem',
+              padding: '0.25rem 0.5rem',
+            },
+            'code::before': {
+              content: 'none',
+            },
+            'code::after': {
+              content: 'none',
+            },
+            blockquote: {
+              color: 'inherit',
+              opacity: 0.8,
+              borderLeftColor: '#0d8eed',
+            },
+            'ul > li::before': {
+              backgroundColor: '#0d8eed',
+            },
+          },
+        },
+      },
+    },
+  },
+  plugins: [
+    require('@tailwindcss/typography'),
+  ],
+};
