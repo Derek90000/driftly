@@ -34,7 +34,7 @@ export const ItineraryResult: React.FC<ItineraryResultProps> = ({ itinerary, onB
         <div className="flex gap-2">
           {isConnected ? (
             <>
-              <Button variant="glass\" size="sm">
+              <Button variant="glass" size="sm">
                 <Edit className="w-4 h-4 mr-2" />
                 Edit
               </Button>
@@ -57,7 +57,7 @@ export const ItineraryResult: React.FC<ItineraryResultProps> = ({ itinerary, onB
 
       <div className="bg-white/10 backdrop-blur-md rounded-xl p-6 border border-white/20">
         <ReactMarkdown 
-          className="prose prose-invert max-w-none"
+          className="prose prose-invert max-w-none prose-headings:text-white prose-h1:text-3xl prose-h2:text-2xl prose-h3:text-xl prose-p:text-white/90 prose-strong:text-white prose-em:text-white/70 prose-li:text-white/90"
           remarkPlugins={[remarkGfm]}
         >
           {itinerary}

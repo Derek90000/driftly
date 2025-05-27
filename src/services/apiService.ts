@@ -21,75 +21,59 @@ export interface TripFormData {
 
 export const generateItinerary = async (formData: TripFormData): Promise<string> => {
   try {
-    // First, format the interests to be more readable
     const formattedInterests = formData.interests.map(interest => {
-      // Convert camelCase or kebab-case to Title Case
       return interest
         .split(/[-_]/)
         .map(word => word.charAt(0).toUpperCase() + word.slice(1))
         .join(' ');
     }).join(', ');
 
-    // Format dates
     const dateInfo = formData.dateType === 'flexible' 
       ? 'Flexible dates – suggest an ideal duration and timeline'
       : `${formData.startDate} to ${formData.endDate}`;
 
-    const prompt = `# Travel Itinerary
+    const prompt = `You are a professional travel planner. Create a detailed, day-by-day travel itinerary based on the following preferences:
 
-## Trip Details
 - **Destinations**: ${formData.destinations.join(', ')}
 - **Dates**: ${dateInfo}
-- **Budget**: $${formData.budget} per person
+- **Budget**: $${formData.budget} per person – include estimated daily costs for meals, transportation, and activities
 - **Interests**: ${formattedInterests}
-- **Weather Preference**: ${formData.weatherPreference}
-- **Pace**: ${formData.pace}
+- **Weather Preference**: ${formData.weatherPreference} – avoid seasons or dates that conflict with this
+- **Pace**: ${formData.pace} – adjust number of activities per day accordingly
 - **Trip Type**: ${formData.tripType}
-- **Accessibility**: ${formData.accessibility ? 'Wheelchair accessible options required' : 'Standard accessibility'}
+- **Accessibility Needs**: ${formData.accessibility ? 'Yes – ensure locations and travel are mobility-friendly' : 'No specific accessibility requirements'}
 
-## Daily Itinerary
-
-${formData.destinations.map((destination, index) => `
-# Day ${index + 1}: ${destination}
+For each **day** of the trip, include:
 
 ### 🗓 Morning
-- **Breakfast**: [Restaurant Name] + [Address]
-  - *Local Tip: Best time to visit is early morning*
-- **Activity**: [Description]
-  - Location: [Address]
-  - Duration: [Time]
-  - Cost: $[Amount]
+- Activity + address
+- Travel time + local tip
+- Nearby breakfast or brunch recommendation
 
 ### ☀️ Afternoon
-- **Lunch**: [Restaurant Name] + [Address]
-  - *Estimated cost: $[Amount]*
-- **Activity**: [Description]
-  - Location: [Address]
-  - Duration: [Time]
-  - Cost: $[Amount]
+- Activity + description + address
+- Lunch recommendation + estimated cost
+- Estimated time required for activity
 
 ### 🌙 Evening
-- **Dinner**: [Restaurant Name] + [Address]
-  - *Ambiance: [Description]*
-- **Activity**: [Description]
-  - Location: [Address]
-  - Duration: [Time]
-  - Cost: $[Amount]
+- Light cultural or nightlife activity (based on interests)
+- Dinner recommendation + vibe (casual, upscale, etc.)
+- Optional late-night tip (if trip pace is balanced or fast)
 
-💡 **Cultural Tips**:
-- [Insight 1]
-- [Insight 2]
+Also include:
+- 🔄 Local transit or walking times between activities
+- 📍 Realistic geographic grouping to reduce travel time
+- 💡 Cultural insights (e.g., "Tuesdays this market closes early" or "Tipping is optional here")
+- 📱 Booking links or site suggestions where possible
 
-🔄 **Transit Notes**:
-- [Transit details between locations]
-`).join('\n')}`;
+IMPORTANT: Replace all placeholders with specific, realistic recommendations. Use actual restaurant names, addresses, and costs.`;
 
     const completion = await openai.chat.completions.create({
       model: "openai/gpt-4",
       messages: [
         {
           role: "system",
-          content: "You are an expert travel planner. Create a detailed itinerary using the provided markdown template. Replace all placeholder text in brackets with specific, realistic recommendations. Maintain the exact markdown formatting provided."
+          content: "You are an expert travel planner creating detailed, day-by-day itineraries. Focus on providing specific, actionable plans that include exact locations, costs, and timing. Use proper Markdown formatting for clear organization. Never use placeholders - always provide real, specific recommendations."
         },
         {
           role: "user",
